@@ -1,0 +1,35 @@
+PyQt
+  http://www.riverbankcomputing.com/news
+  Signals and slots: http://pyqt.sourceforge.net/Docs/PyQt5/signals_slots.html
+  Signals and slots: https://wiki.python.org/moin/JonathanGardnerPyQtTutorial
+  Designer: http://www.cs.usfca.edu/~afedosov/qttut/
+  http://www.rkblog.rk.edu.pl/w/p/simple-text-editor-pyqt4/
+
+Qt5 reactor for Twisted:
+  https://twistedmatrix.com/pipermail/twisted-python/2013-August/027313.html
+Qt4 reactor for Twisted:
+  https://github.com/ghtdak/qtreactor
+
+PyQT Twisted examples:
+  http://eli.thegreenplace.net/2011/05/26/code-sample-socket-client-based-on-twisted-with-pyqt/
+
+Twisted
+  Developer guide: https://twistedmatrix.com/documents/current/core/howto/index.html
+  Tutorials: http://pyfunc.blogspot.com/search/label/Twisted
+
+Conch
+  Package documentation: https://twistedmatrix.com/documents/current/api/twisted.conch.html
+  Examples: https://twistedmatrix.com/documents/current/conch/examples/index.html
+  Example client: https://twistedmatrix.com/documents/current/conch/howto/conch_client.html
+  Port forwarding example: https://gist.github.com/grugq/1436495
+  File transfer example: https://stackoverflow.com/questions/5195427/twisted-conch-filetransfer
+
+Packaging/Bundling on MacOS X:
+  http://qt-project.org/doc/qt-5/macosx-issues.html
+  http://qt-project.org/doc/qt-5/macosx-deployment.html
+  https://stackoverflow.com/questions/96882/how-do-i-create-a-nice-looking-dmg-for-mac-os-x-using-command-line-tools
+  https://github.com/andreyvit/yoursway-create-dmg
+
+How to use UI icons: http://mithatkonar.com/wiki/doku.php/qt/icons
+https://commons.wikimedia.org/wiki/GNOME_Desktop_icons
+

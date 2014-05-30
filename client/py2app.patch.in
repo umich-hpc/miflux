@@ -1,0 +1,64 @@
+diff -urd py2app-0.8.orig/py2app/recipes/sip.py py2app-0.8/py2app/recipes/sip.py
+--- py2app-0.8.orig/py2app/recipes/sip.py	2013-11-14 08:24:17.000000000 -0500
++++ py2app-0.8/py2app/recipes/sip.py	2014-05-29 21:56:52.000000000 -0400
+@@ -35,9 +35,10 @@
+         # qtdir = cfg.qt_lib_dir
+ 
+         ##new version for PyQt 4
+-        from PyQt4 import pyqtconfig
+-        cfg = pyqtconfig.Configuration()
+-        qtdir = cfg.qt_lib_dir
++        #from PyQt4 import pyqtconfig
++        #cfg = pyqtconfig.Configuration()
++        #qtdir = cfg.qt_lib_dir
++        qtdir = "@@TOOLCHAIN@@/lib"
+         if not os.path.exists(qtdir):
+             # half-broken installation? ignore.
+             raise ImportError
+@@ -49,15 +50,15 @@
+             dyld_library_path.insert(0, qtdir)
+             os.environ['DYLD_LIBRARY_PATH'] = ':'.join(dyld_library_path)
+ 
+-        sipdir = os.path.dirname(cfg.pyqt_mod_dir)
++        sipdir = '@@TOOLCHAIN@@/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages'
+         self.packages = set()
+-        self.plugin_dir = os.path.join(cfg.qt_dir, 'plugins')
++        self.plugin_dir = '@@TOOLCHAIN@@/plugins'
+ 
+         for fn in os.listdir(sipdir):
+             fullpath = os.path.join(sipdir, fn)
+             if os.path.isdir(fullpath):
+                 self.packages.add(fn)
+-                if fn == 'PyQt4':
++                if fn == 'PyQt5':
+                     # PyQt4 has a nested structure, also import
+                     # subpackage to ensure everything get seen.
+                     for sub in os.listdir(fullpath):
+@@ -78,15 +79,15 @@
+         except ImportError:
+             return dict()
+ 
+-        if 'PyQt4.uic' in packages:
++        if 'PyQt5.uic' in packages:
+             # PyQt4.uic contains subpackages with python 2 and python 3
+             # support. Exclude the variant that won't be ussed, this avoids
+             # compilation errors on Python 2 (because some of the Python 3
+             # code is not valid Python 2 code)
+             if sys.version_info[0] == 2:
+-                ref = 'PyQt4.uic.port_v3'
++                ref = 'PyQt5.uic.port_v3'
+             else:
+-                ref = 'PyQt4.uic.port_v2'
++                ref = 'PyQt5.uic.port_v2'
+ 
+             # Exclude...
+             mf.lazynodes[ref] = None
+@@ -108,7 +109,7 @@
+             except ImportError as exc:
+                 print("WARNING: ImportError in sip recipe ignored: %s"%(exc,))
+ 
+-        if mf.findNode('PyQt4') is not None:
++        if mf.findNode('PyQt5') is not None:
+             resources = [pkg_resources.resource_filename('py2app', 'recipes/qt.conf')]
+ 
+             for item in cmd.qt_plugins:

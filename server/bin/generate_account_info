@@ -1,0 +1,105 @@
+#!/usr/bin/env python
+#
+# generate_account_info
+#
+# Create a file named user_accounts containing which allocations each user
+# has access to.
+#
+# Create a file named flux_accounts containing information about resources
+# for each account (maxproc, maxmem).
+#
+# The Flux UI client queries these files rather than asking Moab.
+# This is necessary because Moab often hangs for long periods of time,
+# which is not acceptible from a user interface perspective.
+#
+
+import sys
+import os
+import re
+import string
+import subprocess
+from collections import defaultdict
+import json
+
+
+user_accounts = defaultdict( list ) # user_accounts['bjensen'] = [ 'lsa_flux', 'stats_flux', 'FluxTraining_flux' ]
+flux_accounts = defaultdict( dict ) # flux_accounts['stats_flux'] = { 'maxproc': 30, 'maxmem': 128000000 }   maxmem is in KB
+
+
+
+def get_account_info():
+
+    pipe = subprocess.Popen( [ '/opt/moab/bin/mdiag', '-a' ], stdout=subprocess.PIPE )
+
+    alloc = 'default_flux' # placeholder for un-used allocation
+
+    for line in pipe.stdout:
+
+        m = re.search( r'^([a-zA-Z0-9_]+)\s', line )
+        if m:
+            alloc = m.group(1)
+        if alloc == 'default_flux':
+            continue
+
+        m = re.search( r'MAXPROC=(\d+)', line )
+        if m and 'maxproc' not in flux_accounts[alloc]:
+            # only use this if we did not find MAXPROC[USER] already
+            maxproc = int( m.group(1) )
+            flux_accounts[alloc]['maxproc'] = maxproc
+        m = re.search( r'MAXPROC\[USER\]=(\d+)', line )
+        if m:
+            maxproc = int( m.group(1) )
+            flux_accounts[alloc]['maxproc'] = maxproc
+
+        m = re.search( r'MAXMEM=(\d+)', line )
+        if m and 'maxmem' not in flux_accounts[alloc]:
+            # only use this if we did not find MAXMEM[USER] already
+            maxmem = int( m.group(1) ) * 1024  # in KB
+            flux_accounts[alloc]['maxmem'] = maxmem
+        m = re.search( r'MAXMEM\[USER\]=(\d+)', line )
+        if m:
+            maxmem = int( m.group(1) ) * 1024  # in KB
+            flux_accounts[alloc]['maxmem'] = maxmem
+
+        m = re.search( r'MAXPS(\[USER\])?=(-?\d+)', line )
+        if m:
+            maxps = int( m.group(2) )
+            if maxps < 2:   # disabled allocation may have maxps = -1, 0, 1
+                flux_accounts.pop(alloc, None)
+                alloc = 'default_flux'
+                continue
+
+        m = re.search( r'Users:\s+(\S+)', line )
+        if m:
+            users = m.group(1)
+            if alloc not in flux_accounts or flux_accounts[alloc].get('maxproc', 0) <= 0 or flux_accounts[alloc].get('maxmem', 0) <= 0:
+                flux_accounts.pop(alloc, None)
+                alloc = 'default_flux'
+                continue
+            for u in string.split( users, ',' ):
+                user_accounts[ u ].append( alloc )
+            alloc = 'default_flux'
+
+    pipe.stdout.close()
+    pipe.wait()
+
+
+
+def main():
+
+    get_account_info()
+
+    fu = open( 'user_accounts', 'w' )
+    for u in user_accounts.keys():
+        user_accounts[u].sort()
+        fu.write( "%s:%s\n" % ( u, ','.join( user_accounts[u] ) ) )
+    fu.close()
+
+    fa = open( 'flux_accounts', 'w' )
+    json.dump( flux_accounts, fa, indent=4 )
+    fa.close()
+
+
+if __name__ == "__main__":
+    main()
+
