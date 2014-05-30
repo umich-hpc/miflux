@@ -11,14 +11,14 @@ In particular, MiFlux is not a replacement for a workflow management systems suc
 
 ## Server
 
-A small amount of code needs to be installed on the cluster for MiFlux to work.  This code can be found in the [server](http://github.com/umich-flux/miflux/server) directory.
+A small amount of code needs to be installed on the cluster for MiFlux to work.  This code can be found in the [server](https://github.com/umich-flux/miflux/tree/master/server) directory.
 
 Note that the location of the server code on the cluster is currently hard-coded into the client.
 
 
 ## Client
 
-Currently, the MiFlux client (desktop application) is only installable on MacOS X by developers who are able to compile the toolchain from source.  Instructions are available in the file [client/doc/setup-mac.md](http://github.com/umich-flux/miflux/client/doc/setup-mac.md)
+Currently, the MiFlux client (desktop application) is only installable on MacOS X by developers who are able to compile the toolchain from source.  Instructions are available in the file [client/doc/setup-mac.md](https://github.com/umich-flux/miflux/blob/master/client/doc/setup-mac.md)
 
 
 # SUPPORT
