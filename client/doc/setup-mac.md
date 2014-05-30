@@ -315,6 +315,8 @@ Unfortunately, we do not currently have debugging information for the Qt librari
 
 http://www.clarkcox.com/blog/2009/02/04/inspecting-obj-c-parameters-in-gdb/
 
+Here are the commands to run to see what error message is being passed to `qFatal()` during Qt initialization:
+
 ```
 lldb ./dist/MiFlux.app/Contents/MacOS/MiFlux
 breakpoint set --name QMessageLogger::fatal
@@ -322,7 +324,7 @@ run
 bt
 frame info
 register read
-p (char *)$rsi    # arg 0, usually "%s"
+p (char *)$rsi    # arg 0, the format string; usually "%s"
 p (char *)$rdx    # arg 1, the first format string parameter / error message
 ```
 
