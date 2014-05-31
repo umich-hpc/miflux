@@ -37,6 +37,7 @@ def connectToFlux_useroutput( data ):
     if not data:
         log.msg( "connectToFlux_useroutput(): no data " )
         return
+    # TODO: write to PyQt5.QtCore.QStandardPaths CacheLocation
     data = data.strip()
     user, accounts = data.split(':')
     if not accounts:
@@ -58,6 +59,7 @@ def connectToFlux_accountoutput( data ):
     if not data:
         log.msg( "connectToFlux_accountoutput(): no data " )
         return
+    # TODO: write to PyQt5.QtCore.QStandardPaths CacheLocation
     fluxAccounts = json.loads( data )
 
 def connectToFlux_done( fluxSession ):
@@ -172,6 +174,7 @@ if __name__ == '__main__':
         log.startLogging( sys.stderr, setStdout=False )
     else:
         try: 
+            # TODO: use PyQt5.QtCore.QStandardPaths with DataLocation
             os.mkdir( userHomeDir + "/.miflux", 0700 )
         except OSError:
             if not os.path.isdir( userHomeDir + "/.miflux" ):
