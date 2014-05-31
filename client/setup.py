@@ -12,7 +12,9 @@ DATA_FILES = []
 OPTIONS = {
     'argv_emulation': True,
     #'iconfile': 'bell.icns',
-    'includes': [ 'sip', 'PyQt5', 'twisted' ] }
+    'includes': [ 'sip', 'PyQt5', 'twisted' ],
+    'qt_plugins': [ '*' ]
+    }
 
 setup(
     app=APP,

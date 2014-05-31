@@ -1,0 +1,6 @@
+# {build,dist}/.gitignore do not actually exist as part of the build workflow
+# is for developers to do "rm -rf build dist" periodically.
+build/*
+!build/.gitignore
+dist/*
+!dist/.gitignore

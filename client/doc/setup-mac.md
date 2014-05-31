@@ -191,8 +191,7 @@ pip install altgraph 2>&1 | tee log.altgraph
 curl -O -L https://pypi.python.org/packages/source/p/py2app/py2app-0.8.1.tar.gz
 tar zxf py2app-0.8.1.tar.gz
 cd py2app-0.8.1
-sed "s%@@TOOLCHAIN@@%${TOOLCHAIN}%g" <../../../py2app.patch.in >py2app.patch
-patch -p 1 < py2app.patch
+patch -p 1 < ../py2app.patch
 python setup.py build 2>&1 | tee log.build
 python setup.py install 2>&1 | tee log.install
 ```
@@ -237,8 +236,6 @@ Alternatively, you can run MiFlux with a tty and debugging messages will be disp
 
 ## Building MiFlux for distribution
 
-Do the following, but do not try to run MiFlux yet -- we will need to do some manual steps after this.
-
 ```bash
 cd ~/miflux/client/src
 pyuic5 -o ui_MainWindow.py MainWindow.ui
@@ -248,30 +245,6 @@ cd ..
 rm -rf build dist
 python setup.py py2app 2>&1 | tee log.bundle
 
-```
-
-The application bundle that py2app produces crashes because it can't find the plugin libqcocoa.dylib (see the debugging section below for information on how to determine this).  For a discussion of this problem, see http://qt-project.org/forums/viewthread/26446
-
-Here is our temporary solution until we can modify the py2app sip recipe to take care of this for us automatically:
-
-```
-cd ~/miflux/client/dist/MiFlux.app/Contents/Resources
-rm -rf qt_plugins
-mkdir qt_plugins
-cp -r ~/miflux/client/toolchain/plugins/* qt_plugins/
-
-# You can run this to see what needs to be fixed up:
-#otool -L qt_plugins/platforms/libqcocoa.dylib
-
-for f in `find qt_plugins -type f -name "*.dylib"` ; do
-  echo $f
-  install_name_tool -id @executable_path/../Resources/$f $f
-  refs=`otool -L $f | perl -a -n -e 'print "$F[0]\n" if $F[0] =~ /\/client\/toolchain\//;'`
-  for r in $refs ; do
-    r2=`echo "$r" | perl -p -e 's/^.*\/client\/toolchain\/lib/\@executable_path\/..\/Frameworks/;'`
-    install_name_tool -change "$r" "$r2" $f
-  done
-done
 ```
 
 You should now be able to double-click the app in Finder, or launch it from the command line:
