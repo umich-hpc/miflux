@@ -11,7 +11,7 @@ APP = [ 'src/MiFlux.py' ]
 DATA_FILES = []
 OPTIONS = {
     'argv_emulation': True,
-    #'iconfile': 'bell.icns',
+    'iconfile': 'assets/miflux-icon/miflux-icon-1024.icns',
     'includes': [ 'sip', 'PyQt5', 'twisted' ],
     'qt_plugins': [ '*' ]
     }
