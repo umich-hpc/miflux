@@ -179,7 +179,9 @@ python setup.py install 2>&1 | tee log.install
 
 * http://pythonhosted.org//py2app/
 
-We are installing this from source rather than via pip because we need to patch it to work with PyQt5.
+We are installing this from source rather than via pip because we need to patch it to work with PyQt5.  The patch has been submitted for inclusion upstream:
+
+https://bitbucket.org/ronaldoussoren/py2app/pull-request/7/add-support-for-pyqt5-to-sip-recipe/diff
 
 ```bash
 cd ${TOOLCHAIN}/src
