@@ -62,6 +62,7 @@ The following changes have been made from the [original version](https://github.
 
 * Added `README.md` file [based on work by Seth P](https://github.com/andreyvit/yoursway-create-dmg/pull/24).
 * Added license information based on [the original author's statement](https://github.com/andreyvit/yoursway-create-dmg/issues/10).
+* Removed YourSway builder script and unnecessary .gitignore file.
 
 
 ## LICENSE
