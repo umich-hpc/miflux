@@ -64,6 +64,7 @@ The following changes have been made from the [original version](https://github.
 * Added license information based on [the original author's statement](https://github.com/andreyvit/yoursway-create-dmg/issues/10).
 * Removed YourSway builder script and unnecessary .gitignore file.
 * [Fixed multiple --hide-extension problem](https://github.com/andreyvit/yoursway-create-dmg/issues/22).
+* Fix for icon size being ignored under Mac OS X 10.9 Mavericks.
 
 
 ## LICENSE

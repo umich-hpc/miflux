@@ -31,7 +31,7 @@ on run (volumeName)
 				set icon size to ICON_SIZE
 				set arrangement to not arranged
 			end tell
-			-- For OS X 10.9 Maverics (see above):
+			-- For OS X 10.9 Mavericks (see above):
 			close
 			open
 
