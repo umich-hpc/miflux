@@ -19,12 +19,22 @@ on run (volumeName)
 				set the bounds to {theXOrigin, theYOrigin, theBottomRightX, theBottomRightY}
 				set statusbar visible to false
 			end tell
+			-- Under OS X 10.9 Mavericks, need to close and re-open
+			-- the window in order for the changes to take effect.
+			-- This is likely a bug.  See
+			-- https://stackoverflow.com/questions/20028967/applescript-for-finder-stopped-working-with-mavericks
+			close
+			open
 			
 			set opts to the icon view options of container window
 			tell opts
 				set icon size to ICON_SIZE
 				set arrangement to not arranged
 			end tell
+			-- For OS X 10.9 Maverics (see above):
+			close
+			open
+
 			BACKGROUND_CLAUSE
 			
 			-- Positioning
@@ -35,8 +45,8 @@ on run (volumeName)
 			
 			-- Application Link Clause
 			APPLICATION_CLAUSE
-            close
-            open
+			close
+			open
 			
 			update without registering applications
 			-- Force saving of the size
