@@ -32,10 +32,10 @@ on run (volumeName)
 				set arrangement to not arranged
 			end tell
 			-- For OS X 10.9 Mavericks (see above):
-			close
-			open
 
 			BACKGROUND_CLAUSE
+			close
+			open
 			
 			-- Positioning
 			POSITION_CLAUSE
