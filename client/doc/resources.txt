@@ -30,6 +30,9 @@ Packaging/Bundling on MacOS X:
   https://stackoverflow.com/questions/96882/how-do-i-create-a-nice-looking-dmg-for-mac-os-x-using-command-line-tools
   https://github.com/andreyvit/yoursway-create-dmg
 
+Git subtree:
+  https://blogs.atlassian.com/2013/05/alternatives-to-git-submodule-git-subtree/
+
 How to use UI icons: http://mithatkonar.com/wiki/doku.php/qt/icons
 https://commons.wikimedia.org/wiki/GNOME_Desktop_icons
 

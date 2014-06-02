@@ -238,12 +238,18 @@ Alternatively, you can run MiFlux with a tty and debugging messages will be disp
 
 ## Building MiFlux for distribution
 
+### Build Miflux
+
 ```bash
 cd ~/miflux/client/src
 pyuic5 -o ui_MainWindow.py MainWindow.ui
 rm *.pyc
+```
 
-cd ..
+### Create an application bundle
+
+```
+cd ~/miflux/client
 rm -rf build dist
 python setup.py py2app 2>&1 | tee log.bundle
 
@@ -255,13 +261,42 @@ You should now be able to double-click the app in Finder, or launch it from the 
 open dist/MiFlux.app
 ```
 
-We will soon be enhancing `setup.py` to create a .dmg containing the app bundle, an applications alias, and a pretty background, for easy installation by the end user.  Until then, you can create a `.zip` archive in order to distribute the app.
-
 If you get the error "The application cannot be opened because its executable is missing", you can either `rm -rf build dist` then rebuild the app (using the procedure above) or you can rebuild the Launch Services database:
 
 ```bash
 /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -f dist/MiFlux.app
 ```
+
+### Create a disk image
+
+```bash
+cd ~/miflux/client
+rm -f MiFlux.dmg rw.MiFlux.dmg dist/MiFlux.dmg
+./util/create-dmg/create-dmg \
+  --volname MiFlux \
+  --volicon ./assets/dmg-icon/dmg-icon.icns \
+  --window-pos 200 120 \
+  --window-size 800 400 \
+  --background ./assets/dmg-background/dmg-background.tiff \
+  --icon-size 128 \
+  --icon MiFlux.app 200 190 \
+  --hide-extension MiFlux.app \
+  --app-drop-link 600 185 \
+  ./MiFlux.dmg \
+  dist 2>&1 | tee log.create-dmg
+```
+
+If the placement of the app icons is not correct, try removing the .dmg and running the script again.  If, after 2-3 runs, the above script doesn't set the properties of the .dmg window correctly, or if you get AppleScript errors, make sure that the program under which you are running the `create-dmg` script (e.g., Terminal, XQuartz, iTerm2, etc.) is allowed to control the computer (In System Preferences, go to Secureity and Privacy, go to the Privacy tab, select Accessiblity, and make sure that the program is listed and its checkbox is checked).  If that does not resolve the problem, try running the following:
+
+```bash
+echo '
+   tell application "System Events"
+       activate
+       if not (UI elements enabled) then set (UI elements enabled) to true
+   end tell
+' | osascript
+```
+
 
 ## Debugging crashes
 
