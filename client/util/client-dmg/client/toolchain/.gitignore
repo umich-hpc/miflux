@@ -1,0 +1,5 @@
+*
+!.gitignore
+!src
+src/*
+!src/py2app.patch
