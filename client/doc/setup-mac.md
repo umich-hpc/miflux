@@ -198,6 +198,17 @@ python setup.py build 2>&1 | tee log.build
 python setup.py install 2>&1 | tee log.install
 ```
 
+## Install Esky
+
+We're not using pip to install Esky because there have been a number of changes since the most recent release (0.9.8) and because we want to be able to read the tutorials and source code.
+
+```bash
+cd ${TOOLCHAIN}/src
+git clone git@github.com:cloudmatrix/esky.git
+cd esky
+python setup.py build 2>&1 | tee log.build
+python setup.py install 2>&1 | tee log.install
+```
 
 # Building the MiFlux application
 
@@ -251,8 +262,7 @@ rm *.pyc
 ```
 cd ~/miflux/client
 rm -rf build dist
-python setup.py py2app 2>&1 | tee log.bundle
-
+python setup.py bdist_esky 2>&1 | tee log.bundle
 ```
 
 You should now be able to double-click the app in Finder, or launch it from the command line:
@@ -272,6 +282,8 @@ If you get the error "The application cannot be opened because its executable is
 ```bash
 cd ~/miflux/client
 rm -f MiFlux.dmg rw.MiFlux.dmg dist/MiFlux.dmg
+mkdir dist/dmg
+( cd dist/dmg ; unzip ../MiFlux-*.zip )
 ./util/create-dmg/create-dmg \
   --volname MiFlux \
   --volicon ./assets/dmg-icon/dmg-icon.icns \
@@ -282,8 +294,8 @@ rm -f MiFlux.dmg rw.MiFlux.dmg dist/MiFlux.dmg
   --icon MiFlux.app 200 190 \
   --hide-extension MiFlux.app \
   --app-drop-link 600 185 \
-  ./MiFlux.dmg \
-  dist 2>&1 | tee log.create-dmg
+  ./dist/MiFlux.dmg \
+  dist/dmg 2>&1 | tee log.create-dmg
 ```
 
 If the placement of the app icons is not correct, try removing the .dmg and running the script again.  If, after 2-3 runs, the above script doesn't set the properties of the .dmg window correctly, or if you get AppleScript errors, make sure that the program under which you are running the `create-dmg` script (e.g., Terminal, XQuartz, iTerm2, etc.) is allowed to control the computer (In System Preferences, go to Secureity and Privacy, go to the Privacy tab, select Accessiblity, and make sure that the program is listed and its checkbox is checked).  If that does not resolve the problem, try running the following:

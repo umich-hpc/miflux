@@ -13,18 +13,18 @@ userHomeDir = expanduser( "~" )
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget
 
-from ui_MainWindow import Ui_MainWindow
+from miflux.ui_MainWindow import Ui_MainWindow
 
 if __name__ == '__main__':
     app = QApplication( sys.argv )
-    import qt5reactor
-    qt5reactor.install()
+    import miflux.qt5reactor
+    miflux.qt5reactor.install()
 
 from twisted.internet import reactor
 from twisted.internet.defer import Deferred, setDebugging
 from twisted.python import log
 
-from ssh import *
+from miflux.ssh import *
 
 fluxSession = None
 fluxAccounts = None
