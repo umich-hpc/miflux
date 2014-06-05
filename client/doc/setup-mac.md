@@ -263,12 +263,14 @@ rm *.pyc
 cd ~/miflux/client
 rm -rf build dist
 python setup.py bdist_esky 2>&1 | tee log.bundle
+mkdir dist/dmg
+( cd dist/dmg ; unzip ../MiFlux-*.zip )
 ```
 
 You should now be able to double-click the app in Finder, or launch it from the command line:
 
 ```bash
-open dist/MiFlux.app
+open dist/dmg/MiFlux.app
 ```
 
 If you get the error "The application cannot be opened because its executable is missing", you can either `rm -rf build dist` then rebuild the app (using the procedure above) or you can rebuild the Launch Services database:
@@ -282,8 +284,6 @@ If you get the error "The application cannot be opened because its executable is
 ```bash
 cd ~/miflux/client
 rm -f MiFlux.dmg rw.MiFlux.dmg dist/MiFlux.dmg
-mkdir dist/dmg
-( cd dist/dmg ; unzip ../MiFlux-*.zip )
 ./util/create-dmg/create-dmg \
   --volname MiFlux \
   --volicon ./assets/dmg-icon/dmg-icon.icns \
