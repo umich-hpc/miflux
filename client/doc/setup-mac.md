@@ -214,14 +214,6 @@ python setup.py install 2>&1 | tee log.install
 
 This is currently a very rough, manual process.  It will be improved and automated in the near future.
 
-## One-time-only setup
-
-This has already been done, and you should not need to re-do it (re-doing it will lose the modifications that were subsequently made to setup.py):
-
-```bash
-cd ~/miflux/client
-py2applet --make-setup src/MiFlux.py  # only needs to be run once, ever
-```
 
 ## Building MiFlux for development
 
@@ -252,9 +244,9 @@ Alternatively, you can run MiFlux with a tty and debugging messages will be disp
 ### Build Miflux
 
 ```bash
-cd ~/miflux/client/src
+cd ~/miflux/client/miflux
 pyuic5 -o ui_MainWindow.py MainWindow.ui
-rm *.pyc
+find . -name "*.pyc" | xargs rm
 ```
 
 ### Create an application bundle
@@ -262,9 +254,9 @@ rm *.pyc
 ```
 cd ~/miflux/client
 rm -rf build dist
-python setup.py bdist_esky 2>&1 | tee log.bundle
+python setup.py bdist_esky 2>&1 | tee log.bundle  # creates an esky .zip file
 mkdir dist/dmg
-( cd dist/dmg ; unzip ../MiFlux-*.zip )
+( cd dist/dmg ; unzip ../MiFlux-*.zip )  # extract app so we can create a dmg
 ```
 
 You should now be able to double-click the app in Finder, or launch it from the command line:
@@ -276,7 +268,7 @@ open dist/dmg/MiFlux.app
 If you get the error "The application cannot be opened because its executable is missing", you can either `rm -rf build dist` then rebuild the app (using the procedure above) or you can rebuild the Launch Services database:
 
 ```bash
-/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -f dist/MiFlux.app
+/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -f dist/dmg/MiFlux.app
 ```
 
 ### Create a disk image

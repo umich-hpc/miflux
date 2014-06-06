@@ -14,6 +14,7 @@ from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget
 
 from miflux.ui_MainWindow import Ui_MainWindow
+import miflux.util.update
 
 if __name__ == '__main__':
     app = QApplication( sys.argv )
@@ -173,17 +174,27 @@ if __name__ == '__main__':
     if sys.stdout.isatty():
         log.startLogging( sys.stderr, setStdout=False )
     else:
-        try: 
+        if not os.path.isdir( userHomeDir + "/.miflux" ):
             # TODO: use PyQt5.QtCore.QStandardPaths with DataLocation
             os.mkdir( userHomeDir + "/.miflux", 0700 )
+        logFile = userHomeDir + "/.miflux/miflux.log"
+        try:
+            if os.path.isfile( logFile ):
+                # MS Windows can't rename a file if the destination exists
+                os.unlink( logFile + ".old" )
         except OSError:
-            if not os.path.isdir( userHomeDir + "/.miflux" ):
-                raise
-        log.startLogging( open( userHomeDir + "/.miflux/miflux.log", 'w' ), setStdout=False )
+            pass  # it's OK to overwrite the old log file if we could not delete it
+        try:
+            os.rename( logFile, logFile + ".old" )
+        except OSError:
+            pass  # it's OK to overwrite the old log file if we could not rename it
+        log.startLogging( open( logFile, 'w' ), setStdout=False )
     setDebugging( True )
+    log.msg( "Now with SUPER awesomeness!" )
 
     fluxui = MainWindow( reactor )
     fluxui.show()
+    miflux.util.update.do_update()
     reactor.run()
     sys.exit( 0 )
   
