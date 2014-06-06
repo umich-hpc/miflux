@@ -10,8 +10,12 @@ PY2APP_OPTIONS = {
     'iconfile': 'assets/miflux-icon/miflux-icon-1024.icns',
     'includes': [ 'esky', 'sip', 'PyQt5', 'twisted' ],
     'qt_plugins': [ 'platforms/*', 'imageformats/*' ],
-    'excludes': [ 'PyQt5.QtWebKit', 'PyQt5.QtWebKitWidgets', 'PyQt5.QtDesigner', 'PyQt5.QtXmlPatterns', 'PyQt5.QtQml', 'PyQt5.QtQuick', 'PyQt5.QtDeclarative' ],
-    'dylib_excludes': [ 'QtWebKit.framework', 'QtWebKitWidgets.framework', ' QtDesigner.framework', 'QtXmlPatterns.framework', 'QtQml.framework', 'QtQuick.framework', 'QtDeclarative' ]
+    'excludes': [ 'PyQt5.QtWebKit', 'PyQt5.QtWebKitWidgets',
+        'PyQt5.QtDesigner', 'PyQt5.QtXmlPatterns', 'PyQt5.QtQml',
+        'PyQt5.QtQuick', 'PyQt5.QtDeclarative' ],
+    'dylib_excludes': [ 'QtWebKit.framework', 'QtWebKitWidgets.framework',
+        'QtDesigner.framework', 'QtXmlPatterns.framework', 'QtQml.framework',
+        'QtQuick.framework', 'QtDeclarative' ]
     }
 
 ESKY_OPTIONS = {
