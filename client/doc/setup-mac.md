@@ -329,10 +329,10 @@ Unfortunately, we do not currently have debugging information for the Qt librari
 
 http://www.clarkcox.com/blog/2009/02/04/inspecting-obj-c-parameters-in-gdb/
 
-Here are the commands to run to see what error message is being passed to `qFatal()` during Qt initialization:
+Here are the commands to run to see what error message is being passed to `qFatal()` during Qt initialization.  Note that we're launching the actual app which is inside the Esky wrapper app.
 
 ```
-lldb ./dist/dmg/MiFlux.app/Contents/MacOS/MiFlux
+lldb ./dist/dmg/MiFlux.app/MiFlux-2014060506.macosx-10_8-intel/MiFlux.app
 breakpoint set --name QMessageLogger::fatal
 run
 bt
