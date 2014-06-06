@@ -190,7 +190,6 @@ if __name__ == '__main__':
             pass  # it's OK to overwrite the old log file if we could not rename it
         log.startLogging( open( logFile, 'w' ), setStdout=False )
     setDebugging( True )
-    log.msg( "Now with SUPER awesomeness!" )
 
     fluxui = MainWindow( reactor )
     fluxui.show()
