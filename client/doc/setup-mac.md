@@ -200,12 +200,18 @@ python setup.py install 2>&1 | tee log.install
 
 ## Install Esky
 
-We're not using pip to install Esky because there have been a number of changes since the most recent release (0.9.8) and because we want to be able to read the tutorials and source code.
+We're not using pip to install Esky because there have been a number of changes since the most recent release (0.9.8), we want to be able to read the tutorials and source code, and because we're patching Esky locally.
+
+We're patching esky to add support for symlinks in .zip files; this substantially reduces the size (by 30% for small/simple apps).  The percentage will be lower for larger apps, although the absolute savings will still be 10 - 15 MB or more.  The patch has been submitted for inclusion upstream:
+
+https://github.com/cloudmatrix/esky/pull/65
+
 
 ```bash
 cd ${TOOLCHAIN}/src
 git clone git@github.com:cloudmatrix/esky.git
 cd esky
+patch -p 1 < ../esky.patch
 python setup.py build 2>&1 | tee log.build
 python setup.py install 2>&1 | tee log.install
 ```
