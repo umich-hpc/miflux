@@ -332,7 +332,7 @@ http://www.clarkcox.com/blog/2009/02/04/inspecting-obj-c-parameters-in-gdb/
 Here are the commands to run to see what error message is being passed to `qFatal()` during Qt initialization:
 
 ```
-lldb ./dist/MiFlux.app/Contents/MacOS/MiFlux
+lldb ./dist/dmg/MiFlux.app/Contents/MacOS/MiFlux
 breakpoint set --name QMessageLogger::fatal
 run
 bt
