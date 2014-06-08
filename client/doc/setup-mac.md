@@ -220,34 +220,7 @@ python setup.py install 2>&1 | tee log.install
 
 This is currently a very rough, manual process.  It will be improved and automated in the near future.
 
-
-## Building MiFlux for development
-
-When building MiFlux in alias mode (`py2app -A`) you can make changes to the MiFlux code in the `src` directory without needing to rebuild MiFlux after each change.
-
-```bash
-cd ~/miflux/client/src
-pyuic5 -o ui_MainWindow.py MainWindow.ui
-
-cd ..
-python setup.py py2app -A   # alias mode, for testing and development
-```
-
-If you run MiFlux normally (that is, without a tty), debugging messages will be written to `~/.miflux/miflux.log`:
-
-```bash
-open dist/MiFlux.app
-```
-
-Alternatively, you can run MiFlux with a tty and debugging messages will be displayed on stderr:
-
-```bash
-./dist/MiFlux.app/Contents/MacOS/MiFlux
-```
-
-## Building MiFlux for distribution
-
-### Build Miflux
+## Build Miflux
 
 ```bash
 cd ~/miflux/client/miflux
@@ -255,7 +228,7 @@ pyuic5 -o ui_MainWindow.py MainWindow.ui
 find . -name "*.pyc" | xargs rm
 ```
 
-### Create an application bundle
+## Create an application bundle
 
 ```
 cd ~/miflux/client
@@ -265,10 +238,16 @@ mkdir dist/dmg
 ( cd dist/dmg ; unzip ../MiFlux-*.zip )  # extract app so we can create a dmg
 ```
 
-You should now be able to double-click the app in Finder, or launch it from the command line:
+If you run MiFlux normally (that is, without a tty), debugging messages will be written to `~/.miflux/miflux.log`:
 
 ```bash
 open dist/dmg/MiFlux.app
+```
+
+Alternatively, you can run MiFlux with a tty and debugging messages will be displayed on stderr:
+
+```bash
+./dist/MiFlux.app/Contents/MacOS/MiFlux
 ```
 
 If you get the error "The application cannot be opened because its executable is missing", you can either `rm -rf build dist` then rebuild the app (using the procedure above) or you can rebuild the Launch Services database:
@@ -277,7 +256,7 @@ If you get the error "The application cannot be opened because its executable is
 /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -f dist/dmg/MiFlux.app
 ```
 
-### Create a disk image
+## Create a disk image
 
 ```bash
 cd ~/miflux/client
