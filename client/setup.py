@@ -27,7 +27,7 @@ MiFlux = bdist_esky.Executable( "MiFlux.py", gui_only=True )
 
 setup(
     name='MiFlux',
-    version = "2014060605",
+    version = "2014060902",
     data_files=DATA_FILES,
     options = { "bdist_esky": ESKY_OPTIONS },
     packages=[ 'miflux', 'miflux.util' ],

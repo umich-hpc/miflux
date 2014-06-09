@@ -191,9 +191,10 @@ if __name__ == '__main__':
         log.startLogging( open( logFile, 'w' ), setStdout=False )
     setDebugging( True )
 
-    fluxui = MainWindow( reactor )
-    fluxui.show()
-    miflux.util.update.do_update()
+    miflux = MainWindow( reactor )
+    miflux.show()
+    update = miflux.util.update.Update( miflux )
+    update.check()
     reactor.run()
     sys.exit( 0 )
   
