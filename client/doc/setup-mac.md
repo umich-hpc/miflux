@@ -206,6 +206,16 @@ We're patching esky to add support for symlinks in .zip files; this substantiall
 
 https://github.com/cloudmatrix/esky/pull/65
 
+```bash
+cd ${TOOLCHAIN}/src
+git clone https://github.com/cloudmatrix/esky.git
+cd esky
+patch -p 1 < ../esky.patch
+python setup.py build 2>&1 | tee log.build
+python setup.py install 2>&1 | tee log.install
+```
+
+If git is setup for SSH:
 
 ```bash
 cd ${TOOLCHAIN}/src
