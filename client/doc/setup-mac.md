@@ -13,6 +13,16 @@ Install XCode from the Apple App Store, then install the command line tools:
 xcode-select --install
 ```
 
+## MiFlux code
+
+Get the MiFlux code from GitHub:
+
+```bash
+cd /opt
+git clone https://github.com/umich-flux/miflux.git
+```
+
+
 ## Environment
 
 Set up the environment to be make sure that no Homebrew or XQuartz stuff gets built in to what we're doing, as these things won't be on the systems the app gets installed on.
@@ -22,7 +32,7 @@ You can set `${TOOLCHAIN}` below to be whatever directory you want.  This is whe
 ```bash
 unset DYLD_LIBRARY_PATH
 unset LD_LIBRARY_PATH
-export TOOLCHAIN=${HOME}/miflux/client/toolchain
+export TOOLCHAIN=/opt/miflux/client/toolchain
 export PATH=${TOOLCHAIN}/Frameworks/Python.framework/Versions/2.7/bin:${TOOLCHAIN}/bin:/usr/bin:/bin:/usr/sbin:/sbin
 ```
 
