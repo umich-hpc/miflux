@@ -10,8 +10,11 @@ import json
 from os.path import expanduser
 userHomeDir = expanduser( "~" )
 
-from PyQt5.QtCore import pyqtSlot
+
+from PyQt5.QtCore import pyqtSlot, QStandardPaths
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget
+DataLocation = QStandardPaths.writableLocation(QStandardPaths.DataLocation)
+print(DataLocation)
 
 from miflux.ui_MainWindow import Ui_MainWindow
 import miflux.util.update
@@ -174,10 +177,9 @@ if __name__ == '__main__':
     if sys.stdout.isatty():
         log.startLogging( sys.stderr, setStdout=False )
     else:
-        if not os.path.isdir( userHomeDir + "/.miflux" ):
-            # TODO: use PyQt5.QtCore.QStandardPaths with DataLocation
-            os.mkdir( userHomeDir + "/.miflux", 0700 )
-        logFile = userHomeDir + "/.miflux/miflux.log"
+        if not os.path.isdir( DataLocation + "/.miflux" ):
+            os.mkdir( DataLocation + "/.miflux", 0700 )
+        logFile = DataLocation + "/.miflux/miflux.log"
         try:
             if os.path.isfile( logFile ):
                 # MS Windows can't rename a file if the destination exists
