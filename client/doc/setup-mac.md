@@ -19,6 +19,8 @@ Get the MiFlux code from GitHub:
 
 ```bash
 cd /opt
+sudo mkdir miflux
+sudo chown $USER miflux
 git clone https://github.com/umich-flux/miflux.git
 ```
 
