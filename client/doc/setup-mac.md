@@ -27,9 +27,11 @@ git clone https://github.com/umich-flux/miflux.git
 
 ## Environment
 
+The environment needs to be set up in each new shell you start, before doing any development on the MiFlux application.  You may want to put the following commands in your `~/.bashrc` or some other file.
+
 Set up the environment to be make sure that no Homebrew or XQuartz stuff gets built in to what we're doing, as these things won't be on the systems the app gets installed on.
 
-You can set `${TOOLCHAIN}` below to be whatever directory you want.  This is where all of the tools needed to develop MiFlux will be installed.
+If you are compiling the toolchain yourself (see below), you can set `${TOOLCHAIN}` to be whatever directory you want.  This is where all of the tools needed to develop MiFlux will be installed.
 
 ```bash
 unset DYLD_LIBRARY_PATH
@@ -37,6 +39,22 @@ unset LD_LIBRARY_PATH
 export TOOLCHAIN=/opt/miflux/client/toolchain
 export PATH=${TOOLCHAIN}/Frameworks/Python.framework/Versions/2.7/bin:${TOOLCHAIN}/bin:/usr/bin:/bin:/usr/sbin:/sbin
 ```
+
+
+## Pre-built toolchain
+
+Since it can take several hours to build the toolchain from source (installing Qt, in particular, can take a very long time), you may want to download and install a pre-built toolchain.
+
+If you do this, you will still need to set the environment (see above) each time before doing any development using the toolchain.
+
+```bash
+cd /opt/miflux/client
+curl -O -L https://miflux.lsa.umich.edu/mac/toolchain/toolchain-latest.tar.bz2
+tar jxpf toolchain-latest.tar.bz2
+rm toolchain-latest.tar.bz2
+```
+
+If you install the pre-built toolchain, skip to the section [Building the MiFlux application](#building-the-miflux-application) below.
 
 
 ## Install Python
@@ -53,12 +71,11 @@ See:
 We're currently using the 10.8 SDK because this is the oldest that XCode 5.1.1 supports.  If we need the 10.7 SDK later, try https://github.com/devernay/xcodelegacy
 
 ```bash
-mkdir -p ${TOOLCHAIN}/src
 cd ${TOOLCHAIN}/src
 
-curl -O -L https://www.python.org/ftp/python/2.7.6/Python-2.7.6.tgz
-tar zxf Python-2.7.6.tgz
-cd Python-2.7.6
+curl -O -L https://www.python.org/ftp/python/2.7.7/Python-2.7.7.tgz
+tar zxf Python-2.7.7.tgz
+cd Python-2.7.7
 # Make sure homebrew stuff is not used:
 export PATH=${TOOLCHAIN}/bin:/usr/bin:/bin:/usr/sbin:/sbin
 
@@ -74,8 +91,7 @@ export PATH=${TOOLCHAIN}/bin:/usr/bin:/bin:/usr/sbin:/sbin
 
 make 2>&1 | tee log.make
 make test 2>&1 | tee log.test
-  # with framework:    364 OK, 33 skipped, 3 unexpected skip on Darwin
-  # without framework: 363 OK, 34 skipped, 4 unexpected skip on Darwin
+  # 365 tests OK, 33 test skipped, 1 unexpected skip on Darwin
 make install 2>&1 | tee log.install
 ```
 
@@ -128,9 +144,9 @@ open ${TOOLCHAIN}/bin/Designer.app
 cd ${TOOLCHAIN}/src
 
 curl -O -L \
-  http://sourceforge.net/projects/pyqt/files/sip/sip-4.16/sip-4.16.tar.gz
-tar zxf sip-4.16.tar.gz
-cd sip-4.16
+  http://sourceforge.net/projects/pyqt/files/sip/sip-4.16.1/sip-4.16.1.tar.gz
+tar zxf sip-4.16.1.tar.gz
+cd sip-4.16.1
 python configure.py 2>&1 | tee log.configure
 make 2>&1 | tee log.make
 make install 2>&1 | tee log.install
@@ -165,12 +181,9 @@ python ./examples/qtdemo/qtdemo.py
 cd ${TOOLCHAIN}/src
 pip install zope.interface 2>&1 | tee log.zope.interface
 pip install PyCrypto 2>&1 | tee log.PyCrypto
-pip install PyASN1 2>&1 | tee log.ASN1
+pip install PyASN1 2>&1 | tee log.PyASN1
 pip install pyOpenSSL 2>&1 | tee log.pyOpenSSL
 ```
-
-Note for the future: when we do this on Windows, also install pywin 32 (included with ActivePython).
-
 
 
 ## Install Twisted
@@ -227,15 +240,21 @@ python setup.py build 2>&1 | tee log.build
 python setup.py install 2>&1 | tee log.install
 ```
 
-If git is setup for SSH:
+## Package up the toolchain
+
+Do the following if you want to package up the toolchain you just built for other developers to download and use:
 
 ```bash
-cd ${TOOLCHAIN}/src
-git clone git@github.com:cloudmatrix/esky.git
-cd esky
-patch -p 1 < ../esky.patch
-python setup.py build 2>&1 | tee log.build
-python setup.py install 2>&1 | tee log.install
+cd /opt/miflux/client
+tar -c -f - --exclude toolchain/src --exclude toolchain/.gitignore \
+  toolchain | bzip2 --best -c > toolchain-`date +%Y%m%d`.tar.bz2
+scp toolchain-`date +%Y%m%d`.tar.bz2 \
+  schrodingers.lsa.umich.edu:/var/www/miflux.lsa.umich.edu/html-ssl/mac/toolchain/
+ssh schrodingers.lsa.umich.edu
+  cd /var/www/miflux.lsa.umich.edu/html-ssl/mac/toolchain/
+  rm toolchain-latest.tar.bz2
+  ln -s toolchain-`date +%Y%m%d`.tar.bz2 toolchain-latest.tar.bz2
+  exit
 ```
 
 # Building the MiFlux application
@@ -245,7 +264,7 @@ This is currently a very rough, manual process.  It will be improved and automat
 ## Build Miflux
 
 ```bash
-cd ~/miflux/client/miflux
+cd /opt/miflux/client/miflux
 pyuic5 -o ui_MainWindow.py MainWindow.ui
 find . -name "*.pyc" | xargs rm
 ```
@@ -253,14 +272,14 @@ find . -name "*.pyc" | xargs rm
 ## Create an application bundle
 
 ```
-cd ~/miflux/client
+cd /opt/miflux/client
 rm -rf build dist
 python setup.py bdist_esky 2>&1 | tee log.bundle  # creates an esky .zip file
 mkdir dist/dmg
 ( cd dist/dmg ; unzip ../MiFlux-*.zip )  # extract app so we can create a dmg
 ```
 
-If you run MiFlux normally (that is, without a tty), debugging messages will be written to `~/.miflux/miflux.log`:
+If you run MiFlux normally (that is, without a tty), debugging messages will be written to `~/Library/Application Support/miflux/miflux.log`:
 
 ```bash
 open dist/dmg/MiFlux.app
@@ -281,7 +300,7 @@ If you get the error "The application cannot be opened because its executable is
 ## Create a disk image
 
 ```bash
-cd ~/miflux/client
+cd /opt/miflux/client
 rm -f MiFlux.dmg rw.MiFlux.dmg dist/MiFlux.dmg
 ./util/create-dmg/create-dmg \
   --volname MiFlux \
