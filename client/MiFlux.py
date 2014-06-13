@@ -10,7 +10,6 @@ import json
 from os.path import expanduser
 userHomeDir = expanduser( "~" )
 
-
 from PyQt5.QtCore import pyqtSlot, QStandardPaths
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget
 DataLocation = QStandardPaths.writableLocation(QStandardPaths.DataLocation)
@@ -31,7 +30,6 @@ from miflux.ssh import *
 
 fluxSession = None
 fluxAccounts = None
-
 
 def connectToFlux_useroutput( data ):
     global fluxSession
@@ -65,27 +63,33 @@ def connectToFlux_accountoutput( data ):
     # TODO: write to PyQt5.QtCore.QStandardPaths CacheLocation
     fluxAccounts = json.loads( data )
 
-def connectToFlux_done( fluxSession ):
-    global miFluxServerPath
-    log.msg( "connectToFlux_done() called" )
-    ####
-    d = Deferred()
-    d.addCallback( connectToFlux_useroutput )
-    # TODO: put full path to grep (/bin/grep on Flux, /usr/bin/grep for MacOS X)
-    command = "grep '^" + fluxSession.username + ":' " + miFluxServerPath + "/data/user_accounts"
-    fluxSession.runCommand( command, d )
-    ####
-    d = Deferred()
-    d.addCallback( connectToFlux_accountoutput )
-    # TODO: put full path to grep (/bin/grep on Flux, /usr/bin/grep for MacOS X)
-    command = "cat " + miFluxServerPath + "/data/flux_accounts"
-    fluxSession.runCommand( command, d )
+def connectToFlux_done(fluxSession):
+	#Enable 'Connect' button
+	fluxSession.window.ui.connectButton.setEnabled(True)
+	global miFluxServerPath
+	log.msg( "connectToFlux_done() called" )
+	####
+	d = Deferred()
+	d.addCallback( connectToFlux_useroutput )
+	# TODO: put full path to grep (/bin/grep on Flux, /usr/bin/grep for MacOS X)
+	command = "grep '^" + fluxSession.username + ":' " + miFluxServerPath + "/data/user_accounts"
+	fluxSession.runCommand( command, d )
+	####
+	d = Deferred()
+	d.addCallback( connectToFlux_accountoutput )
+	# TODO: put full path to grep (/bin/grep on Flux, /usr/bin/grep for MacOS X)
+	command = "cat " + miFluxServerPath + "/data/flux_accounts"
+	fluxSession.runCommand( command, d )
 
 
 def connectToFlux( window, username ):
     global miFluxServerHost
+    #Disable 'Connect' button
+    window.ui.connectButton.setText("Connecting")
+    window.ui.connectButton.setEnabled(False)
     log.msg( "connectToFlux() called, username = %s" % username )
     if ( not username or not re.search( r'^[a-z]{3,8}$', username ) ):
+    	
         log.msg( "connectToFlux(): bad username" )
         return
     d = Deferred()
@@ -115,7 +119,6 @@ class MainWindow( QMainWindow ):
             log.msg( "uniqname is OK" )
         else:
             log.msg( "uniqname is not a uniqname" )
-
     @pyqtSlot()
     def on_connectButton_clicked( self ):
         global fluxSession
