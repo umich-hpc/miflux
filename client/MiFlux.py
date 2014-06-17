@@ -167,14 +167,8 @@ class MainWindow( QMainWindow ):
 
 if __name__ == '__main__':
 
-    if True:
-      # The Real Deal:
-      miFluxServerHost = "flux-login.engin.umich.edu"
-      miFluxServerPath = "/home/software/rhel6/lsa/miflux"
-    else:
-      # Local testing environment -- saves us from having to use two-factor auth:
-      miFluxServerHost = "localhost"
-      miFluxServerPath = userHomeDir + "/miflux-localserver"
+    miFluxServerHost = "flux-login.engin.umich.edu"
+    miFluxServerPath = "/home/software/rhel6/lsa/miflux"
 
     if sys.stdout.isatty():
         log.startLogging( sys.stderr, setStdout=False )
